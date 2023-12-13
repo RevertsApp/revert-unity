@@ -47,17 +47,14 @@ namespace Revert.Initializers {
     /// </summary>
     /// <param name="on"> determine if the update loop should be enabled or disabled </param>
     public void ToggleUpdateLoop(bool on) {
-      Debug.Log("ToggleUpdateLoop");
       int updateLoopIndex = Array.FindIndex(customPlayerLoop.subSystemList, system => system.type == typeof(UnityEngine.PlayerLoop.Update));
       if (on && updateLoopIndex == -1) {
-        Debug.Log("ToggleUpdateLoop On");
         var newSubSystemList = customPlayerLoop.subSystemList.ToList();
         newSubSystemList.Add(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
           playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.Update)));
         customPlayerLoop.subSystemList = newSubSystemList.ToArray();
       } else {
         if (updateLoopIndex != -1) {
-        Debug.Log("ToggleUpdateLoop Off");
           var newSubSystemList = customPlayerLoop.subSystemList.ToList();
           newSubSystemList.Remove(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
             playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.Update)));
