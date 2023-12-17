@@ -17,7 +17,7 @@ namespace Revert.Initializers {
       base.Awake();
       originalPlayerLoop = PlayerLoop.GetDefaultPlayerLoop(); // Storing the original player loop
       customPlayerLoop = CreateCustomPlayerLoop();
-      PlayerLoop.SetPlayerLoop(customPlayerLoop); //
+      PlayerLoop.SetPlayerLoop(customPlayerLoop);
     }
 
     /// <summary>
@@ -28,12 +28,12 @@ namespace Revert.Initializers {
       var customPlayerLoop = originalPlayerLoop;
       
       var playerLoopSystems = customPlayerLoop.subSystemList.Where(subSystem =>
-        subSystem.type != typeof(UnityEngine.PlayerLoop.FixedUpdate) && // This disables the physics loop
-        subSystem.type != typeof(UnityEngine.PlayerLoop.Update) && // This might be needed later on for animations that run on the update
+        subSystem.type != typeof(UnityEngine.PlayerLoop.FixedUpdate) && // Disable the physics loop
+        subSystem.type != typeof(UnityEngine.PlayerLoop.Update) &&
         subSystem.type != typeof(UnityEngine.PlayerLoop.EarlyUpdate) &&
         subSystem.type != typeof(UnityEngine.PlayerLoop.PreUpdate) &&
         subSystem.type != typeof(UnityEngine.PlayerLoop.TimeUpdate) &&
-        subSystem.type != typeof(UnityEngine.PlayerLoop.PostLateUpdate) &&
+        // subSystem.type != typeof(UnityEngine.PlayerLoop.PostLateUpdate) && // Responsible for calling start and rendering UI elements inside the editor
         subSystem.type != typeof(UnityEngine.PlayerLoop.PreLateUpdate)).ToArray();
       
       customPlayerLoop.subSystemList = playerLoopSystems;
@@ -52,12 +52,16 @@ namespace Revert.Initializers {
         var newSubSystemList = customPlayerLoop.subSystemList.ToList();
         newSubSystemList.Add(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
           playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.Update)));
+        newSubSystemList.Add(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
+          playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.TimeUpdate)));
         customPlayerLoop.subSystemList = newSubSystemList.ToArray();
       } else {
         if (updateLoopIndex != -1) {
           var newSubSystemList = customPlayerLoop.subSystemList.ToList();
           newSubSystemList.Remove(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
             playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.Update)));
+          newSubSystemList.Remove(originalPlayerLoop.subSystemList.First(playerLoopSystem =>
+            playerLoopSystem.type == typeof(UnityEngine.PlayerLoop.TimeUpdate)));
           customPlayerLoop.subSystemList = newSubSystemList.ToArray();
         }
       }
