@@ -28,5 +28,22 @@ namespace Revert.Core.Extensions {
     public static void RenderFrame( this MonoBehaviour monoBehaviour) {
       Timing.RunCoroutine(RenderFrames(monoBehaviour, 0));
     }
+    
+    /// <summary>
+    /// Start Rendering frames normally 60 per second, until stop rendering is called.
+    /// This method is intensive and should only be used when needed.
+    /// </summary>
+    public static void StartRendering(this MonoBehaviour monoBehaviour) {
+      PlayerLoopManager.Instance.ToggleUpdateLoop(true); // Enables the update loop for the timing to play out
+      OnDemandRendering.renderFrameInterval = 1; // Enables unity to render the normal amount of frames per second
+    }
+    
+    /// <summary>
+    /// Stops rendering frames normally. This method should be called after StartRendering, when you are done rendering frames.
+    /// </summary>
+    public static void StopRendering(this MonoBehaviour monoBehaviour) {
+      OnDemandRendering.renderFrameInterval = int.MaxValue; // Disables unity from rendering frames
+      PlayerLoopManager.Instance.ToggleUpdateLoop(false); // Disables the update loop
+    }
   }
 }

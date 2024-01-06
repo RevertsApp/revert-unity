@@ -46,7 +46,7 @@ namespace Revert.Initializers {
     /// keep the update loop on, but if you are done with the animation, disable the update loop 
     /// </summary>
     /// <param name="on"> determine if the update loop should be enabled or disabled </param>
-    public void ToggleUpdateLoop(bool on) {
+    public void ToggleUpdateLoop(bool on) { // TODO: Enables all type of update loops instead of just the update loop
       int updateLoopIndex = Array.FindIndex(customPlayerLoop.subSystemList, system => system.type == typeof(UnityEngine.PlayerLoop.Update));
       if (on && updateLoopIndex == -1) {
         var newSubSystemList = customPlayerLoop.subSystemList.ToList();
